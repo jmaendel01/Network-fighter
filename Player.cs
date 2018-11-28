@@ -2,11 +2,8 @@ using System;
 
 private class Player
 {
-    health = 10;
-
-}
-
-public void class chooseAction
-{
-    
+    private Integer getHealth()
+    {
+        return 10;
+    }
 }

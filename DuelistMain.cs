@@ -18,6 +18,7 @@ class MyTcpListener
             // TcpListener server = new TcpListener(port);
             server = new TcpListener(localAddr, port);
 
+            //Ralph said something about looking into asyncronous proscessing (or something like that)
             // Start listening for client requests.
             server.Start();
 
@@ -44,14 +45,18 @@ class MyTcpListener
                 NetworkStream stream2 = client2.GetStream();
                 int i;
                 int j;
+                Player P1 = new Player;
+                Player P2 = new Player;
                 //initialize classes
-                // Loop to receive all the data sent by the client.
-                while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                // Loop until either player runs out of health
+                while (P1_Health > 0 || P2_Health > 0)
                 {
                     // Inform the players of how the game works
                     Console.WriteLine("Choose an action to take: Heavy Attack beats a Block and deals 2 damage " +
                     "Block beats a Quick Attack and heals 1" + " Quick Attack beats a Heavy Attack and deals 1 damage." +
                     " You have 10 seconds every round to choose before you are disconnected")
+                    
+
 
                     // Inform the players of their options
                     Console.WriteLine("HA = Heavy Attack");
@@ -67,12 +72,15 @@ class MyTcpListener
                     // Translate data bytes to a ASCII string.
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                     data2 = System.Text.Encoding.ASCII.GetString(bytes, 0, j);
+                    CombatLogic();
 
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+
+                    // Sends out the returnData from CombatLogic
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(returnData);
 
                     // Send back a response.
                     stream.Write(msg, 0, msg.Length);
-                    Console.WriteLine("Sent: {0}", data);
+                    stream2.Write(msg, 0, msg.Length);
                 }
 
                 // Shutdown and end connection
